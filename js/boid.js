@@ -164,21 +164,18 @@ show() {
 		this.shape.rotation = this.vel.angle();
 
 		if (opt.hues) {
-			// Normalize the speed to a percentage between 0 (slowest) and 1 (fastest)
 			const t = constrain(this.vel.mag() / opt.maxSpeed, 0, 1);
 
 			// Colors: Gold (#f3c317) to Maroon (#790e1c)
-			const r1 = 0xf3, g1 = 0xc3, b1 = 0x17; // Gold
-			const r2 = 0x79, g2 = 0x0e, b2 = 0x1c; // Maroon
+			const r1 = 0xf3, g1 = 0xc3, b1 = 0x17;
+			const r2 = 0x79, g2 = 0x0e, b2 = 0x1c;
 
-			// Interpolate between the two colors based on speed
 			const R = Math.round(r1 + (r2 - r1) * t);
 			const G = Math.round(g1 + (g2 - g1) * t);
 			const B = Math.round(b1 + (b2 - b1) * t);
 
-			// Reconstruct the hex color integer for PixiJS (matching your hsv logic)
-			this.shape.tint = 0x010000 * R + 0x000100 * G + 0x000001 * B;
-            
+			// Fast bitwise shift to build the 0xRRGGBB hex color
+			this.shape.tint = (R << 16) + (G << 8) + B;
 		} else {
 			this.shape.tint = 0xffffff;
 		}
