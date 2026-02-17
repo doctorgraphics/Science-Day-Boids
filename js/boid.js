@@ -163,13 +163,27 @@ class Boid extends V2D {
 		this.shape.y = this.y;
 		this.shape.rotation = this.vel.angle();
 
-		if (opt.hues)
-			this.shape.tint = hsv(
-				constrain(this.vel.mag() / (opt.maxSpeed * 2), 0, 10), //constrain(this.vel.mag() / (opt.maxSpeed * 2), 0, 1),
-				1,
-				1
-			);
-		else this.shape.tint = 0xffffff;
+		if (opt.hues) {
+			// 1. Normalize the boid's speed to a value between 0 and 1
+			const t = constrain(this.vel.mag() / opt.maxSpeed, 0, 1);
+
+			// 2. Define the RGB channels for #f3c317 (Gold)
+			const r1 = 0xf3, g1 = 0xc3, b1 = 0x17;
+			
+			// 3. Define the RGB channels for #790e1c (Maroon)
+			const r2 = 0x79, g2 = 0x0e, b2 = 0x1c;
+
+			// 4. Interpolate (lerp) between the two colors based on speed 't'
+			const r = r1 + (r2 - r1) * t;
+			const g = g1 + (g2 - g1) * t;
+			const b = b1 + (b2 - b1) * t;
+
+			// 5. Combine the new RGB values back into a single hex integer
+			this.shape.tint = (Math.round(r) << 16) + (Math.round(g) << 8) + Math.round(b);
+
+		} else {
+			this.shape.tint = 0xffffff;
+		}
 
 		if (opt.desired && this.acc.sqrMag() > 0.01) {
 			this.desired.alpha = 0.5;
