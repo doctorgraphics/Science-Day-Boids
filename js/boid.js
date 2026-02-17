@@ -157,30 +157,28 @@ class Boid extends V2D {
 		}
 	}
 
-	show() {
+show() {
 		this.shape = this.getShape();
 		this.shape.x = this.x;
 		this.shape.y = this.y;
 		this.shape.rotation = this.vel.angle();
 
 		if (opt.hues) {
-			// 1. Normalize the boid's speed to a value between 0 and 1
+			// Normalize the speed to a percentage between 0 (slowest) and 1 (fastest)
 			const t = constrain(this.vel.mag() / opt.maxSpeed, 0, 1);
 
-			// 2. Define the RGB channels for #f3c317 (Gold)
-			const r1 = 0xf3, g1 = 0xc3, b1 = 0x17;
-			
-			// 3. Define the RGB channels for #790e1c (Maroon)
-			const r2 = 0x79, g2 = 0x0e, b2 = 0x1c;
+			// Colors: Gold (#f3c317) to Maroon (#790e1c)
+			const r1 = 0xf3, g1 = 0xc3, b1 = 0x17; // Gold
+			const r2 = 0x79, g2 = 0x0e, b2 = 0x1c; // Maroon
 
-			// 4. Interpolate (lerp) between the two colors based on speed 't'
-			const r = r1 + (r2 - r1) * t;
-			const g = g1 + (g2 - g1) * t;
-			const b = b1 + (b2 - b1) * t;
+			// Interpolate between the two colors based on speed
+			const R = Math.round(r1 + (r2 - r1) * t);
+			const G = Math.round(g1 + (g2 - g1) * t);
+			const B = Math.round(b1 + (b2 - b1) * t);
 
-			// 5. Combine the new RGB values back into a single hex integer
-			this.shape.tint = (Math.round(r) << 16) + (Math.round(g) << 8) + Math.round(b);
-
+			// Reconstruct the hex color integer for PixiJS (matching your hsv logic)
+			this.shape.tint = 0x010000 * R + 0x000100 * G + 0x000001 * B;
+            
 		} else {
 			this.shape.tint = 0xffffff;
 		}
