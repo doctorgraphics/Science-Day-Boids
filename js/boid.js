@@ -163,22 +163,12 @@ show() {
 		this.shape.y = this.y;
 		this.shape.rotation = this.vel.angle();
 
-		if (opt.hues) {
-			const t = constrain(this.vel.mag() / opt.maxSpeed, 0, 1);
-
-			// Colors: Gold (#f3c317) to Maroon (#790e1c)
-			const r1 = 0xf3, g1 = 0xc3, b1 = 0x17;
-			const r2 = 0x79, g2 = 0x0e, b2 = 0x1c;
-
-			const R = Math.round(r1 + (r2 - r1) * t);
-			const G = Math.round(g1 + (g2 - g1) * t);
-			const B = Math.round(b1 + (b2 - b1) * t);
-
-			// Fast bitwise shift to build the 0xRRGGBB hex color
-			this.shape.tint = (R << 16) + (G << 8) + B;
-		} else {
-			this.shape.tint = 0xffffff;
-		}
+		// Inside Boid.show()
+if (opt.hues) {
+    this.shape.tint = 0xff0000; // Force them all to be bright red
+} else {
+    this.shape.tint = 0xffffff;
+}
 
 		if (opt.desired && this.acc.sqrMag() > 0.01) {
 			this.desired.alpha = 0.5;
